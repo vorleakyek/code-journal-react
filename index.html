@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Code Journal</title>
+    <link rel="icon" href="images/favicon.ico" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="light-gray">
+    <header class="header purple-background">
+      <div class="container">
+        <div class="row">
+          <div class="column-full d-flex align-center">
+            <h1 class="white-text">Code Journal</h1>
+            <h3>
+              <a id="entriesLink" class="entries-link white-text" href="#"
+                >Entries</a
+              >
+            </h3>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="container hidden" data-view="entry-form">
+        <div class="row">
+          <div class="column-full d-flex justify-between">
+            <h1 id="formH1">New Entry</h1>
+          </div>
+        </div>
+        <form id="entryForm">
+          <div class="row margin-bottom-1">
+            <div class="column-half">
+              <img
+                class="input-b-radius form-image"
+                id="formImage"
+                src="images/placeholder-image-square.jpg"
+                alt="image of entry image" />
+            </div>
+            <div class="column-half">
+              <label class="margin-bottom-1 d-block" for="title">Title</label>
+              <input
+                required
+                class="input-b-color text-padding input-b-radius purple-outline input-height margin-bottom-2 d-block width-100"
+                type="text"
+                id="formTitle"
+                name="formTitle" />
+              <label class="margin-bottom-1 d-block" for="photoUrk"
+                >Photo URL</label
+              >
+              <input
+                required
+                class="input-b-color text-padding input-b-radius purple-outline input-height margin-bottom-2 d-block width-100"
+                type="text"
+                id="formURL"
+                name="formURL" />
+            </div>
+          </div>
+          <div class="row margin-bottom-1">
+            <div class="column-full">
+              <label class="margin-bottom-1 d-block" for="formNotes"
+                >Notes</label
+              >
+              <textarea
+                required
+                class="input-b-color text-padding input-b-radius purple-outline d-block width-100"
+                name="formNotes"
+                id="formNotes"
+                cols="30"
+                rows="10"></textarea>
+            </div>
+          </div>
+          <div class="row">
+            <div class="column-full d-flex justify-between">
+              <button
+                class="invisible delete-entry-button"
+                type="button"
+                id="deleteEntry">
+                Delete Entry
+              </button>
+              <button
+                class="input-b-radius text-padding purple-background white-text">
+                SAVE
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="container" data-view="entries">
+        <div class="row">
+          <div class="column-full d-flex justify-between align-center">
+            <h1>Entries</h1>
+            <h3>
+              <a id="formLink" class="white-text form-link" href="#">NEW</a>
+            </h3>
+          </div>
+        </div>
+        <div class="row">
+          <div class="column-full">
+            <ul class="entry-ul" id="entryUl"></ul>
+          </div>
+        </div>
+      </div>
+    </main>
+    <article>
+      <div
+        id="modalContainer"
+        class="modal-container d-flex justify-center align-center hidden">
+        <div class="modal row">
+          <div class="column-full d-flex justify-center">
+            <p>Are you sure you want to delete this entry?</p>
+          </div>
+          <div class="column-full d-flex justify-between">
+            <button class="modal-button" id="cancelButton">Cancel</button>
+            <button
+              class="modal-button red-background white-text"
+              id="confirmButton">
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
