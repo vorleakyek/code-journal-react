@@ -5,21 +5,49 @@ import EntryForm from './EntryForm';
 import Modal from './Modal';
 import {data} from './data';
 
-function App() {
-  const [view, setView] = useState('entry-form');
 
+const data1 = {
+  entries: [{
+    entryId: 1,
+    imgUrl: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQJPaUIMOhLmrwRizWuRLf5aVc34bkX1YrYsGPj8hPaxiUSlyAY47tz0i9g6hZh3bfTUc2xUfUFLBsUXiPfPVYScs-Apy6RFQ5rYD_bLb5rGafL-A16Ht200g&usqp=CAc",
+    notes: "Kiwi berries are edible fruits the size of a large grape, similar to fuzzy kiwifruit in taste and internal appearance but with a thin, smooth green skin.",
+    title: "kiwi"
+  },
+  {
+    entryId: 2,
+    imgUrl: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQJPaUIMOhLmrwRizWuRLf5aVc34bkX1YrYsGPj8hPaxiUSlyAY47tz0i9g6hZh3bfTUc2xUfUFLBsUXiPfPVYScs-Apy6RFQ5rYD_bLb5rGafL-A16Ht200g&usqp=CAc",
+    notes: "Kiwi berries are edible fruits the size of a large grape, similar to fuzzy kiwifruit in taste and internal appearance but with a thin, smooth green skin.",
+    title: "kiwi"
+  },
+  {
+    entryId: 3,
+    imgUrl: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQJPaUIMOhLmrwRizWuRLf5aVc34bkX1YrYsGPj8hPaxiUSlyAY47tz0i9g6hZh3bfTUc2xUfUFLBsUXiPfPVYScs-Apy6RFQ5rYD_bLb5rGafL-A16Ht200g&usqp=CAc",
+    notes: "Kiwi berries are edible fruits the size of a large grape, similar to fuzzy kiwifruit in taste and internal appearance but with a thin, smooth green skin.",
+    title: "kiwi"
+  }],
+  nextEntryId: 1,
+};
+
+function App() {
+  const [view, setView] = useState('entries');
+  // console.log('data1', data1)
+  // console.log('data', data)
   const viewPageDisplay = function () {
     if (view === 'entry-form') {
-     return <EntryForm/>;
+     return <EntryForm title="New Entry" onClick={()=>handleView('entries')}/>;
     }
 
-    return <EntryList/>;
+    return <EntryList data={data1} onClick={()=>handleView('entry-form')}/>;
+  }
+  const PageDisplay = viewPageDisplay();
+
+  function handleView(page) {
+    setView(page);
   }
 
-  const PageDisplay = viewPageDisplay();
   return (
   <>
-    <PageHeader />
+    <PageHeader onClick={()=>{handleView('entries')}} />
     <main>
       {PageDisplay}
     </main>

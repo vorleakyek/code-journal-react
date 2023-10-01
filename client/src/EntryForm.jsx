@@ -1,10 +1,10 @@
-export default function EntryForm() {
+export default function EntryForm({title, onClick}) {
   return(
     <>
       <div className="container" data-view="entry-form">
         <div className="row">
           <div className="column-full d-flex justify-between">
-            <h1 id="formH1">New Entry</h1>
+            <h1 id="formH1">{title}</h1>
           </div>
         </div>
         <form id="entryForm">
@@ -58,7 +58,8 @@ export default function EntryForm() {
                 Delete Entry
               </button>
               <button
-                className="input-b-radius text-padding purple-background white-text">
+                className="input-b-radius text-padding purple-background white-text"
+                onClick={onClick}>
                 SAVE
               </button>
             </div>
