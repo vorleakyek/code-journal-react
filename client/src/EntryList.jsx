@@ -27,6 +27,11 @@ export default function EntryList({data, onClick}) {
 
 
 function ItemList({items, onClick}) {
+
+  if(items.length === 0) {
+    return <p>No entries have been recorded.</p>
+  }
+
   return(
   <>
     {items.map((item)=>(

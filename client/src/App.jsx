@@ -1,43 +1,37 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import EntryList from './EntryList';
 import PageHeader from './PageHeader';
 import EntryForm from './EntryForm';
 import Modal from './Modal';
-import {data} from './data';
-
-
-const data1 = {
-  entries: [{
-    entryId: 1,
-    imgUrl: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQJPaUIMOhLmrwRizWuRLf5aVc34bkX1YrYsGPj8hPaxiUSlyAY47tz0i9g6hZh3bfTUc2xUfUFLBsUXiPfPVYScs-Apy6RFQ5rYD_bLb5rGafL-A16Ht200g&usqp=CAc",
-    notes: "Kiwi berries are edible fruits the size of a large grape, similar to fuzzy kiwifruit in taste and internal appearance but with a thin, smooth green skin.",
-    title: "kiwi"
-  },
-  {
-    entryId: 2,
-    imgUrl: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQJPaUIMOhLmrwRizWuRLf5aVc34bkX1YrYsGPj8hPaxiUSlyAY47tz0i9g6hZh3bfTUc2xUfUFLBsUXiPfPVYScs-Apy6RFQ5rYD_bLb5rGafL-A16Ht200g&usqp=CAc",
-    notes: "Kiwi berries are edible fruits the size of a large grape, similar to fuzzy kiwifruit in taste and internal appearance but with a thin, smooth green skin.",
-    title: "kiwi"
-  },
-  {
-    entryId: 3,
-    imgUrl: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQJPaUIMOhLmrwRizWuRLf5aVc34bkX1YrYsGPj8hPaxiUSlyAY47tz0i9g6hZh3bfTUc2xUfUFLBsUXiPfPVYScs-Apy6RFQ5rYD_bLb5rGafL-A16Ht200g&usqp=CAc",
-    notes: "Kiwi berries are edible fruits the size of a large grape, similar to fuzzy kiwifruit in taste and internal appearance but with a thin, smooth green skin.",
-    title: "kiwi"
-  }],
-  nextEntryId: 1,
-};
+import data from './data';
 
 function App() {
+
+  function initialData() {
+    const localData = JSON.parse(localStorage.getItem('code-journal-data'));
+
+    if(!localData) {
+      return data;
+    }
+    return localData;
+  }
+
+  const initialDataResult = initialData();
+
   const [view, setView] = useState('entries');
-  // console.log('data1', data1)
-  // console.log('data', data)
+  const [savedData, setSavedData] = useState(initialDataResult);
+
+  useEffect(()=>{
+    const dataJSON = JSON.stringify(savedData);
+    localStorage.setItem('code-journal-data', dataJSON);
+  },[savedData]);
+
   const viewPageDisplay = function () {
     if (view === 'entry-form') {
      return <EntryForm title="New Entry" onClick={()=>handleView('entries')}/>;
     }
 
-    return <EntryList data={data1} onClick={()=>handleView('entry-form')}/>;
+    return <EntryList data={savedData} onClick={()=>handleView('entry-form')}/>;
   }
   const PageDisplay = viewPageDisplay();
 
