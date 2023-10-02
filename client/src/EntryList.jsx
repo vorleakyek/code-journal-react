@@ -36,7 +36,7 @@ function ItemList({items, onClick}) {
   <>
     {items.map((item)=>(
       <EntryItem  key={item.entryId} data={item} onClick={onClick}/>
-    ))};
+    ))}
   </>
   )
 
