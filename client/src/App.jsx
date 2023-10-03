@@ -6,28 +6,21 @@ import Modal from './Modal';
 import data from './data';
 
 function App() {
+
+  //NOTE: When the App is first load, it will check if there are any data in the local storage that can be used. If there are no data that can be used, it will use the given empty data as the initial value. Once the page is render for the first time, the callback function inside of the useEffect will be called and set the empty data in the local storage. Then, any changes to the savedData after clicking save on the form will be updated and save to the local storage. Determine the initialData is also needed to load the saved entries after page refresh.
+
   const initialDataResult = initialData();
-  const [view, setView] = useState('entries');
   const [savedData, setSavedData] = useState(initialDataResult);
+  const [view, setView] = useState('entries');
   const [entryTitle, setEntryTitle] = useState('');
   const [imgUrl, setImgUrl] = useState('');
-  const [note,setNote] = useState('');
+  const [notes,setNotes] = useState('');
+  const PageDisplay = viewPageDisplay();
 
   useEffect(()=>{
     const dataJSON = JSON.stringify(savedData);
     localStorage.setItem('code-journal-data', dataJSON);
   },[savedData]);
-
-
-  const viewPageDisplay = function () {
-    if (view === 'entry-form') {
-     return <EntryForm formTitle="New Entry" formValue={[entryTitle,imgUrl,note]} onSubmit={handleFormSubmit} onChange={handleFormChange}/>;
-    }
-
-    return <EntryList data={savedData} onClick={()=>handleView('entry-form')}/>;
-  }
-  const PageDisplay = viewPageDisplay();
-
 
   function initialData() {
     const localData = JSON.parse(localStorage.getItem('code-journal-data'));
@@ -38,18 +31,25 @@ function App() {
     return localData;
   }
 
+  function viewPageDisplay() {
+    if (view === 'entry-form') {
+     return <EntryForm formTitle="New Entry" formValue={[entryTitle,imgUrl,notes]} onSubmit={handleFormSubmit} onChange={handleFormChange}/>;
+    }
+
+    return <EntryList data={savedData} onClick={()=>handleView('entry-form')}/>;
+  }
+
   function handleView(page) {
     setView(page);
   }
 
   function handleFormSubmit(e) {
     e.preventDefault();
-    console.log('submit');
     const newEntryObj = {
       entryId: savedData.nextEntryId,
       title: entryTitle,
       imgUrl: imgUrl,
-      notes:note
+      notes:notes
     }
 
     const updatedEntries = [...savedData.entries, newEntryObj];
@@ -66,16 +66,15 @@ function App() {
     } else if(e.target.id=== 'formURL') {
       setImgUrl(e.target.value);
     } else if (e.target.id=== 'formNotes') {
-      setNote(e.target.value);
+      setNotes(e.target.value);
     }
   }
 
   function resetForm() {
   setEntryTitle('');
   setImgUrl('');
-  setNote('')
+  setNotes('')
   }
-
 
   return (
   <>
