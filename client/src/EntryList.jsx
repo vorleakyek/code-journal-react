@@ -1,6 +1,6 @@
-import EntryItem from "./EntryItem"
+import EntryItem from './EntryItem';
 
-export default function EntryList({data, onClick}) {
+export default function EntryList({ data, onClick }) {
   return (
     <>
       <div className="container" data-view="entries">
@@ -8,36 +8,38 @@ export default function EntryList({data, onClick}) {
           <div className="column-full d-flex justify-between align-center">
             <h1>Entries</h1>
             <h3>
-              <a onClick={onClick} id="formLink" className="white-text form-link" href="#">NEW</a>
+              <a
+                onClick={onClick}
+                id="formLink"
+                className="white-text form-link"
+                href="#">
+                NEW
+              </a>
             </h3>
           </div>
         </div>
         <div className="row">
           <div className="column-full">
-            <ul className="entry-ul" id="entryUl">
-              <ItemList items={data.entries} onClick={onClick}/>
-            </ul>
+            <ItemList items={data.entries} onClick={onClick} />
           </div>
         </div>
       </div>
     </>
-  )
+  );
 }
 
-
-
-function ItemList({items, onClick}) {
-
-  if(items.length === 0) {
-    return <p>No entries have been recorded.</p>
+function ItemList({ items, onClick }) {
+  if (items.length === 0) {
+    return <p>No entries have been recorded.</p>;
   }
 
-  return(
-  <>
-    {items.map((item)=>(
-      <EntryItem  key={item.entryId} data={item} onClick={onClick}/>
-    ))}
-  </>
-  )
-
+  return (
+    <ul className="entry-ul" id="entryUl" onClick={onClick}>
+      {items.map((item) => (
+        <li key={item.entryId} id={item.entryId}>
+          <EntryItem data={item} />
+        </li>
+      ))}
+    </ul>
+  );
 }
