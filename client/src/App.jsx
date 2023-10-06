@@ -6,29 +6,47 @@ import Modal from './Modal';
 import data from './data';
 
 function App() {
-  //NOTE: When the App is first load, it will check if there are any data in the local storage that can be used. If there are no data that can be used, it will use the given empty data as the initial value. Once the page is render for the first time, the callback function inside of the useEffect will be called and set the empty data in the local storage. Then, any changes to the savedData after clicking save on the form will be updated and save to the local storage. Determine the initialData is also needed to load the saved entries after page refresh.
+  // NOT SURE WHY THE LOCAL STORAGE DATA IS RESET TO EMPTY AFTER PAGE REFRESH?
+  // const initialDataResult = initialData();
+  // const [savedData, setSavedData] = useState(initialDataResult);
 
-  const initialDataResult = initialData();
-  const [savedData, setSavedData] = useState(initialDataResult);
+  // function initialData() {
+  //     const localData = JSON.parse(localStorage.getItem('code-journal-data'));
+
+  //     if (!localData) {
+  //       return data;
+  //     }
+
+  //     return localData;
+  //   }
+
+  const [savedData, setSavedData] = useState(data);
   const [view, setView] = useState('entries');
   const [entryTitle, setEntryTitle] = useState('');
   const [imgUrl, setImgUrl] = useState('');
   const [notes, setNotes] = useState('');
+  const [editEntryId, setEditEntryId] = useState('');
   const PageDisplay = viewPageDisplay();
+
+  useEffect(() => {
+    function initialData() {
+      const localData = JSON.parse(localStorage.getItem('code-journal-data'));
+
+      if (!localData) {
+        return data;
+      }
+
+      return localData;
+    }
+
+    const initialDataResult = initialData();
+    setSavedData(initialDataResult);
+  }, []);
 
   useEffect(() => {
     const dataJSON = JSON.stringify(savedData);
     localStorage.setItem('code-journal-data', dataJSON);
   }, [savedData]);
-
-  function initialData() {
-    const localData = JSON.parse(localStorage.getItem('code-journal-data'));
-
-    if (!localData) {
-      return data;
-    }
-    return localData;
-  }
 
   function viewPageDisplay() {
     if (view === 'entry-form') {
@@ -43,24 +61,58 @@ function App() {
     }
 
     if (view === 'edit-form') {
+      const previousEntryObject = findEntryObject(savedData, editEntryId);
+
       return (
         <EntryForm
           formTitle="Edit Entry"
-          formValue={[entryTitle, imgUrl, notes]}
+          formValue={[
+            previousEntryObject.title,
+            previousEntryObject.imgUrl,
+            previousEntryObject.notes,
+          ]}
           onSubmit={handleFormSubmit}
           onChange={handleFormChange}
         />
       );
     }
 
-    return <EntryList data={savedData} onClick={handleViewForm} />;
+    return (
+      <EntryList
+        data={savedData}
+        handleView={handleView}
+        editEntryId={handleEditEntryId}
+      />
+    );
   }
 
-  function handleViewForm(e) {
-    if (e.target.id === 'formLink') {
-      handleView('entry-form');
+  // function editformValue(previousEntryObject) {
+  //   if (previousEntryObject.title !== entryTitle) {
+  //   setEntryTitle(previousEntryObject.title);
+  //   console.log('hey2')
+  // }
+
+  // if (previousEntryObject.imgUrl !== imgUrl) {
+  //   setImgUrl(previousEntryObject.imgUrl);
+  // }
+
+  // if (previousEntryObject.notes !== notes) {
+  //   setNotes(previousEntryObject.notes);
+  // }
+
+  // }
+
+  function findEntryObject(data, entryIdNumber) {
+    for (let i = 0; i < data.entries.length; i++) {
+      if (data.entries[i].entryId === entryIdNumber) {
+        return data.entries[i];
+      }
     }
-    //Add code for the edit entry flow
+    return null;
+  }
+
+  function handleEditEntryId(entryId) {
+    setEditEntryId(entryId);
   }
 
   function handleView(page) {

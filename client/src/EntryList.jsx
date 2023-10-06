@@ -1,6 +1,6 @@
 import EntryItem from './EntryItem';
 
-export default function EntryList({ data, onClick }) {
+export default function EntryList({ data, handleView, editEntryId }) {
   return (
     <>
       <div className="container" data-view="entries">
@@ -9,7 +9,7 @@ export default function EntryList({ data, onClick }) {
             <h1>Entries</h1>
             <h3>
               <a
-                onClick={onClick}
+                onClick={() => handleView('entry-form')}
                 id="formLink"
                 className="white-text form-link"
                 href="#">
@@ -20,7 +20,16 @@ export default function EntryList({ data, onClick }) {
         </div>
         <div className="row">
           <div className="column-full">
-            <ItemList items={data.entries} onClick={onClick} />
+            <ItemList
+              items={data.entries}
+              onClick={() => {
+                const idEntry = Number(
+                  event.target.closest('li').getAttribute('id')
+                );
+                editEntryId(idEntry);
+                handleView('edit-form');
+              }}
+            />
           </div>
         </div>
       </div>
@@ -34,10 +43,10 @@ function ItemList({ items, onClick }) {
   }
 
   return (
-    <ul className="entry-ul" id="entryUl" onClick={onClick}>
+    <ul className="entry-ul" id="entryUl">
       {items.map((item) => (
         <li key={item.entryId} id={item.entryId}>
-          <EntryItem data={item} />
+          <EntryItem data={item} onClick={onClick} />
         </li>
       ))}
     </ul>
