@@ -10,6 +10,7 @@ function App() {
   const [savedData, setSavedData] = useState(initialDataResult);
   const [view, setView] = useState('entries');
   const [editEntryId, setEditEntryId] = useState('');
+  // const [isEditEntry, setIsEditEntry] = useState(false);
   const PageDisplay = viewPageDisplay();
 
   function initialData() {
@@ -32,25 +33,30 @@ function App() {
     if (view === 'entry-form') {
       return (
         <EntryForm
-          handleFormSubmit = {handleFormSubmit}
+          handleFormSubmit={handleNewFormSubmit}
           deleteBtnClassName="invisible delete-entry-button"
           formTitle="New Entry"
           data={savedData}
+          view={view}
+          editEntryId={editEntryId}
         />
       );
     }
 
 
-    // if (view === 'edit-form') {
-    //   const previousEntryObject = findEntryObject(savedData, editEntryId);
+    if (view === 'edit-form') {
 
-    //   return (
-    //     <EntryForm
-    //       handleFormSubmit={handleFormSubmit}
-    //       deleteBtnClassName="delete-entry-button"
-    //     />
-    //   );
-    // }
+      return (
+        <EntryForm
+          handleFormSubmit={handleEditFormSubmit}
+          deleteBtnClassName="delete-entry-button"
+          formTitle="Edit Entry"
+          data={savedData}
+          view={view}
+          editEntryId={editEntryId}
+        />
+      );
+    }
 
     return (
       <EntryList
@@ -61,15 +67,6 @@ function App() {
     );
   }
 
-  // function findEntryObject(data, entryIdNumber) {
-  //   for (let i = 0; i < data.entries.length; i++) {
-  //     if (data.entries[i].entryId === entryIdNumber) {
-  //       return data.entries[i];
-  //     }
-  //   }
-  //   return null;
-  // }
-
   function handleEditEntryId(entryId) {
     setEditEntryId(entryId);
   }
@@ -78,7 +75,7 @@ function App() {
     setView(page);
   }
 
-  function handleFormSubmit(newEntryObj) {
+  function handleNewFormSubmit(newEntryObj) {
 
     const updatedEntries = [newEntryObj, ...savedData.entries];
     const updatedEntryId = savedData.nextEntryId + 1;
@@ -89,9 +86,29 @@ function App() {
 
     setSavedData(updatedSavedData);
     handleView('entries');
-    console.log('pass in id', savedData.nextEntryId);
+
   }
 
+  function handleEditFormSubmit(editEntryObj,savedData) {
+
+    const updatedEntries = savedData.entries.map((entry)=>{
+      if (entry.entryId === editEntryId) {
+        return editEntryObj;
+      } else {
+        return entry;
+      }
+    });
+
+
+    const updatedSavedData = {
+      entries: updatedEntries,
+      nextEntryId: savedData.nextEntryId
+    };
+
+    setSavedData(updatedSavedData)
+    handleView('entries');
+    setEditEntryId('');
+  }
 
 
 

@@ -1,6 +1,10 @@
 import EntryItem from './EntryItem';
 
 export default function EntryList({ data, handleView, editEntryId }) {
+
+
+
+
   return (
     <>
       <div className="container" data-view="entries">

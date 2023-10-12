@@ -1,15 +1,23 @@
-import {useState} from 'react';
+import { useState } from 'react';
 
 export default function EntryForm({
   handleFormSubmit,
   deleteBtnClassName,
   formTitle,
-  data
+  data,
+  view,
+  editEntryId,
 }) {
+  const previousEntryObject = findEntryObject(data, editEntryId) || null;
+  const initialTitle = previousEntryObject ? previousEntryObject.title : '';
+  const initialImgUrl = previousEntryObject ? previousEntryObject.imgUrl : '';
+  const initialNotes = previousEntryObject ? previousEntryObject.notes : '';
+  const [entryTitle, setEntryTitle] = useState(initialTitle);
+  const [imgUrl, setImgUrl] = useState(initialImgUrl);
+  const [notes, setNotes] = useState(initialNotes);
 
-  const [entryTitle, setEntryTitle] = useState('');
-  const [imgUrl, setImgUrl] = useState('');
-  const [notes, setNotes] = useState('');
+  const handleSubmit =
+    view === 'edit-form' ? handleEditFormSubmit : handleNewFormSubmit;
 
   function handleFormChange(e) {
     if (e.target.id === 'formTitle') {
@@ -27,13 +35,8 @@ export default function EntryForm({
     setNotes('');
   }
 
-
   function handleNewFormSubmit(event, savedData) {
     event.preventDefault();
-
-    console.log('recieved id', savedData.nextEntryId);
-    console.log('savedData pass in form component', savedData)
-
 
     const newEntryObj = {
       entryId: savedData.nextEntryId,
@@ -42,12 +45,32 @@ export default function EntryForm({
       notes: notes,
     };
 
-
     handleFormSubmit(newEntryObj);
     resetForm();
-
   }
 
+  function handleEditFormSubmit(event, savedData) {
+    event.preventDefault();
+
+    const UpdatedEditEntryObj = {
+      entryId: previousEntryObject.entryId,
+      title: entryTitle,
+      imgUrl: imgUrl,
+      notes: notes,
+    };
+
+    handleFormSubmit(UpdatedEditEntryObj, savedData);
+    resetForm();
+  }
+
+  function findEntryObject(data, entryIdNumber) {
+    for (let i = 0; i < data.entries.length; i++) {
+      if (data.entries[i].entryId === entryIdNumber) {
+        return data.entries[i];
+      }
+    }
+    return null;
+  }
 
   return (
     <>
@@ -57,7 +80,7 @@ export default function EntryForm({
             <h1 id="formH1">{formTitle}</h1>
           </div>
         </div>
-        <form id="entryForm" onSubmit={()=>handleNewFormSubmit(event,data)}>
+        <form id="entryForm" onSubmit={() => handleSubmit(event, data)}>
           <div className="row margin-bottom-1">
             <div className="column-half">
               <img
