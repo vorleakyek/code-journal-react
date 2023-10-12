@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import Modal from './Modal';
+
 
 export default function EntryForm({
   handleFormSubmit,
@@ -7,6 +9,8 @@ export default function EntryForm({
   data,
   view,
   editEntryId,
+  handleUpdateData,
+  handleView
 }) {
   const previousEntryObject = findEntryObject(data, editEntryId) || null;
   const initialTitle = previousEntryObject ? previousEntryObject.title : '';
@@ -15,6 +19,7 @@ export default function EntryForm({
   const [entryTitle, setEntryTitle] = useState(initialTitle);
   const [imgUrl, setImgUrl] = useState(initialImgUrl);
   const [notes, setNotes] = useState(initialNotes);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleSubmit =
     view === 'edit-form' ? handleEditFormSubmit : handleNewFormSubmit;
@@ -70,6 +75,23 @@ export default function EntryForm({
       }
     }
     return null;
+  }
+
+  function toggleShowDeleteModal() {
+    setShowDeleteModal(!showDeleteModal);
+  }
+
+  function handleDeleteEntry(entryId) {
+    const updatedArray = data.entries.filter(
+      (entry) => entry.entryId !== entryId
+    );
+    const updatedSavedData = {
+      entries: updatedArray,
+      nextEntryId: data.nextEntryId,
+    };
+
+    handleUpdateData(updatedSavedData);
+    handleView('entries');
   }
 
   return (
@@ -138,7 +160,8 @@ export default function EntryForm({
               <button
                 className={deleteBtnClassName}
                 type="button"
-                id="deleteEntry">
+                id="deleteEntry"
+                onClick={toggleShowDeleteModal}>
                 Delete Entry
               </button>
               <button
@@ -150,6 +173,13 @@ export default function EntryForm({
           </div>
         </form>
       </div>
+      <Modal
+        isActive={showDeleteModal}
+        editEntryId={editEntryId}
+        handleCancel={toggleShowDeleteModal}
+        handleConfirm={handleDeleteEntry}
+        // handleUpdateData={(newData) => setSavedData(newData)}
+      />
     </>
   );
 }

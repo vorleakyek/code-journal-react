@@ -2,15 +2,13 @@ import { useState, useEffect } from 'react';
 import EntryList from './EntryList';
 import PageHeader from './PageHeader';
 import EntryForm from './EntryForm';
-import Modal from './Modal';
-import getData, {addNewEntry, updateEntry, deleteEntry } from './data';
+import getData, { addNewEntry, updateEntry, deleteEntry } from './data';
 
 function App() {
   const initialDataResult = initialData();
   const [savedData, setSavedData] = useState(initialDataResult);
   const [view, setView] = useState('entries');
   const [editEntryId, setEditEntryId] = useState('');
-  // const [isEditEntry, setIsEditEntry] = useState(false);
   const PageDisplay = viewPageDisplay();
 
   function initialData() {
@@ -28,7 +26,6 @@ function App() {
     localStorage.setItem('code-journal-data', dataJSON);
   }, [savedData]);
 
-
   function viewPageDisplay() {
     if (view === 'entry-form') {
       return (
@@ -39,13 +36,12 @@ function App() {
           data={savedData}
           view={view}
           editEntryId={editEntryId}
+          handleUpdateData={(newData)=>setSavedData(newData)}
         />
       );
     }
 
-
     if (view === 'edit-form') {
-
       return (
         <EntryForm
           handleFormSubmit={handleEditFormSubmit}
@@ -54,6 +50,8 @@ function App() {
           data={savedData}
           view={view}
           editEntryId={editEntryId}
+          handleUpdateData={(newData) => setSavedData(newData)}
+          handleView={handleView}
         />
       );
     }
@@ -76,7 +74,6 @@ function App() {
   }
 
   function handleNewFormSubmit(newEntryObj) {
-
     const updatedEntries = [newEntryObj, ...savedData.entries];
     const updatedEntryId = savedData.nextEntryId + 1;
     const updatedSavedData = {
@@ -86,12 +83,10 @@ function App() {
 
     setSavedData(updatedSavedData);
     handleView('entries');
-
   }
 
-  function handleEditFormSubmit(editEntryObj,savedData) {
-
-    const updatedEntries = savedData.entries.map((entry)=>{
+  function handleEditFormSubmit(editEntryObj, savedData) {
+    const updatedEntries = savedData.entries.map((entry) => {
       if (entry.entryId === editEntryId) {
         return editEntryObj;
       } else {
@@ -99,18 +94,15 @@ function App() {
       }
     });
 
-
     const updatedSavedData = {
       entries: updatedEntries,
-      nextEntryId: savedData.nextEntryId
+      nextEntryId: savedData.nextEntryId,
     };
 
-    setSavedData(updatedSavedData)
+    setSavedData(updatedSavedData);
     handleView('entries');
     setEditEntryId('');
   }
-
-
 
   return (
     <>
@@ -120,7 +112,6 @@ function App() {
         }}
       />
       <main>{PageDisplay}</main>
-      <Modal />
     </>
   );
 }
